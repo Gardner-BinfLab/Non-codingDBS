@@ -1,7 +1,6 @@
 library(ggplot2)
 library(grid)
 library(gridExtra)
-library(pROC)
 args=commandArgs(TRUE)
 
 pathogenic_filename=args[1]

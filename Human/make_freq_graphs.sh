@@ -9,6 +9,7 @@ benign_csv_file="ncVariation_dataset-benign_UCSC_list.csv"
 # 3. extract_clinVar_freq_benign.py
 # 4. pathogenic_bitscores.csv likely-path_bitscores.csv benign_bitscores.csv pathogenic_refbitscores.csv likely-path_refbitscores.csv benign_refbitscores.csv benign_clinVar_freq.csv
 # 5. plot_dbs_densities_dif_freq.R
+# requiers: python v3.7, R version 3.5.0 with packages: "ggplot2", "grid", "gridExtra" installed
 
 python3 extract_clinVar_freq_benign.py $csv_file $benign_csv_file benign_clinVar_freq.csv > benign_error
 
