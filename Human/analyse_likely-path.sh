@@ -8,7 +8,7 @@
 # adjust the name of the table if needed
 csv_file="ncVariation_dataset-testing_labels.csv"
 #   5. pathogenic_bitscores.csv, benign_bitscores.csv, pathogenic_refbitscores.csv, benign_refbitscores.csv
-# requiers: python v3.7, R version 3.5.0 with packages: "ggplot2", "grid", "gridExtra" installed, mafFetch (http://hgdownload.soe.ucsc.edu/admin/exe/)
+# requiers: python v3.7, HMMER 3.2.1, R version 3.5.0 with packages: "ggplot2", "grid", "gridExtra" installed, mafFetch (http://hgdownload.soe.ucsc.edu/admin/exe/)
 # To use mafFetch one needs to add specification to $HOME/.hg.conf file (http://genome.ucsc.edu/goldenPath/help/mysql.html)
 
 python3 process_large_table_likely-path.py $csv_file overBed_likely-path likely-path.csv

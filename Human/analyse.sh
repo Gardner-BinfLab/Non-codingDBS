@@ -10,7 +10,7 @@ benign_csv_file="ncVariation_dataset-benign_UCSC_list.csv"
 # 5. make_seq_refseq_and_alignments_from_maf.py
 # 6. extract_bitscore.py
 # 7. plot_dbss.R
-# requiers: python v3.7, R version 3.5.0 with package "ggplot2" installed, mafFetch (http://hgdownload.soe.ucsc.edu/admin/exe/)
+# requiers: python v3.7, HMMER 3.2.1, R version 3.5.0 with package "ggplot2" installed, mafFetch (http://hgdownload.soe.ucsc.edu/admin/exe/)
 # To use mafFetch one needs to add specification to $HOME/.hg.conf file (http://genome.ucsc.edu/goldenPath/help/mysql.html)
 
 
