@@ -1,0 +1,48 @@
+\documentclass[12pt,article]{article}
+
+\usepackage{amssymb, amsmath, amsthm} 
+\usepackage{graphicx}
+\usepackage{natbib}
+
+\begin{document}
+
+\begin{center}
+\Large{\scshape Delta bit score can detect signal in random forest classifier applied to non-coding DNA} 
+\end{center}
+
+\section{Introduction}
+
+The need for developing new scoring methods for non-coding mutations is highlighted in \citet{drubay2018benchmark}.
+
+\citet{wheeler2016profile} introduced a profile-based scoring for identifying gene function divergence .. 
+
+Here, we 
+
+\begin{itemize}
+
+\item investigated the distribution of DBS for non-conding regions of 13 salmonella strains. And showed that ...
+
+\item analysed human non-coding data set using random forest classifier developed by Wheeler et al ...
+
+\end{itemize}
+
+\section{Materials and methods}
+
+\subsection{Human data set}
+
+We assembled a data set containing pathogenic and benign variants. 
+
+\subsection{HMM for human data}
+
+To build HMM models for pathogenic and benign variants we retrieved 100 way human to vertebrate alignment from UCSC dataset. Then we build the HMM from the alignments in the region corresponding to +/-100 nucleotides away from the modified region. Thus if a variation is due to a SNP then the region is 201 nucleotides long. If it is an insertion of a block of $n$ nucleotides then the region length is 200 for the reference and $200+n$ for the alternate sequence and vise versa in case of a deletion of a $n$-nucleotide block. We treated a duplication in a similar way as an insertion when it comes to the region length. 
+
+\section{Results}
+
+We have found that the high absolute values of delta bit scores were associated with upstream proximity to the top predictor genes found in \citet{wheeler2018machine}
+
+\bibliographystyle{bevbib4} 
+\bibliography{ncdbs}
+
+
+
+\end{document}

@@ -1,10 +1,10 @@
 #run from a directory which contains:
 # 1. ncVariation_dataset-testing_labels.csv --- table sheet (converted to csv) with curated benign and pathogenic data
 # adjust the name of the table if needed:
-csv_file="ncVariation_dataset-testing_labels.csv"
+pathogenic_csv_file="ncVar_pathogenic.csv"
 # 2. ncVariation_dataset-benign_UCSC_list.csv --- table sheet (converted to csv) with bening data based on minor allele frequencies
 # adjust the name of the table if needed:
-benign_csv_file="ncVariation_dataset-benign_UCSC_list.csv"
+benign_csv_file="ncVar_benign.csv"
 # 3. process_large_table.py
 # 4. process_benign_sheet.py
 # 5. make_seq_refseq_and_alignments_from_maf.py
@@ -14,7 +14,7 @@ benign_csv_file="ncVariation_dataset-benign_UCSC_list.csv"
 # To use mafFetch one needs to add specification to $HOME/.hg.conf file (http://genome.ucsc.edu/goldenPath/help/mysql.html)
 
 
-python3 process_large_table.py $csv_file overBed_pathogenic overBed_benign pathogenic.csv benign.csv
+python3 process_large_table.py $pathogenic_csv_file overBed_pathogenic pathogenic.csv
 
 python3 process_benign_sheet.py $benign_csv_file overBed_benign benign.csv
 
