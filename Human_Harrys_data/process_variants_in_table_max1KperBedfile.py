@@ -5,7 +5,7 @@ import math
 
 csv_file_name=sys.argv[1] # a file with pathogenic or benign variants containing fields: "ID", "chr", "pos", "ref", "alt"
 bed_folder_name=sys.argv[2]
-out_file_name=sys.argv[3] # a file to contain chr, region, change, strand info
+csv_folder_name=sys.argv[3] # a folder for the .csv files to contain chr, region, change, strand info
 
 def merge_intervals(intervals):
     new_intervals=[]
@@ -17,17 +17,25 @@ def merge_intervals(intervals):
         if interval[1] > max:
             max=interval[1]
     bits=[ 0 for x in range(max-min+2) ] # the length of the bits is one bit longer to mark the end of the last interval when converting back
+    attached_strings=[ " " for x in range(max-min+2) ]
     for interval in intervals: # convert intervals represented by ranges to intervals represented by bits (shifted by min) and simultaneously intersect them
         for i in range(interval[0], interval[1]+1):
             bits[i-min]=1
+        attached_strings[interval[0]-min]=interval[2]
     reading=False
+    strings=set()
     for i in range(len(bits)): # find the resulting overlapping intervals and convert to ranges
-        if bits[i]==1 and not reading:
-            reading=True
-            new_interval=[i+min]
+        if bits[i]==1:
+            if not reading:
+                reading=True
+                new_interval=[i+min]
+            if attached_strings[i] != " ":
+                strings.add(attached_strings[i])
         elif bits[i]==0 and reading:
             reading=False
             new_interval.append(i-1+min)
+            new_interval.append(strings)
+            strings=set()
             new_intervals.append(new_interval)
     return new_intervals
 
@@ -86,10 +94,13 @@ for index, row in df.iterrows():
                 change_type="deletion"
             new_row=pd.DataFrame([[chr, location, reference, change, change_type]], columns=['Chr', 'Location', 'Reference', 'Change', 'Change type'])
             variants_df=variants_df.append(new_row)
+        else:
+            print("One of the required fileds is nan: " + row)
+    else:
+        print("Row with no id found: "+ row)
+        
 
 intervals_by_chr={}
-
-out_file = open(out_file_name, 'w')
 
 for index, row in variants_df.iterrows():
     change_type=str(row["Change type"])
@@ -98,29 +109,35 @@ for index, row in variants_df.iterrows():
     left=left_right[0]
     right=left_right[1]
     chr_name="Chr"+str(row["Chr"])
-    out_file.write(chr_name + " " + str(left) + " " + str(right) + " " + str(row["Reference"]) + " " + str(row["Change"]) + " " + change_type + "\n")
+    string_for_csv=chr_name + " " + str(left) + " " + str(right) + " " + str(row["Reference"]) + " " + str(row["Change"]) + " " + change_type + "\n"
     if chr_name in intervals_by_chr:
-        intervals_by_chr[chr_name].append([left, right])
+        intervals_by_chr[chr_name].append([left, right, string_for_csv])
     else:
-        intervals_by_chr[chr_name]=[[left, right]]
-
-out_file.close()
+        intervals_by_chr[chr_name]=[[left, right, string_for_csv]]
 
 intervals_by_chr_merged=merge_all_intervals(intervals_by_chr)
 
 i=1
-bed_file_name = bed_folder_name+"/bed"+str(i)
-bed_file = open(bed_file_name, 'w')
+#bed_file_name = bed_folder_name+"/bed"+str(i)
+#bed_file = open(bed_file_name, 'w')
+csv_file_name=csv_folder_name.strip("/")+"/"+str(i)+".csv"
+csv_file = open(csv_file_name, 'w')
 count=0
 for key, intervals in intervals_by_chr_merged.items():
     for interval in intervals:
         if count==1000:
-            bed_file.close()
+            #bed_file.close()
+            csv_file.close()
             i=i+1
-            bed_file_name = bed_folder_name+"/bed"+str(i)
-            bed_file = open(bed_file_name, 'w')
+            #bed_file_name = bed_folder_name+"/bed"+str(i)
+            #bed_file = open(bed_file_name, 'w')
+            csv_file_name=csv_folder_name.strip("/")+"/"+str(i)+".csv"
+            csv_file = open(csv_file_name, 'w')
             count=0
-        bed_file.write(key + " " + str(interval[0]) + " " + str(interval[1]) + "\n")
+        #bed_file.write(key + " " + str(interval[0]) + " " + str(interval[1]) + "\n")
+        for csv_string in interval[2]:
+            csv_file.write(csv_string)
         count=count+1
-bed_file.close()
+#bed_file.close()
+csv_file.close()
 

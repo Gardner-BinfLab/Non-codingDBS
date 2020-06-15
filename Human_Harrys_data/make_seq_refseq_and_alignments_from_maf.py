@@ -49,11 +49,14 @@ def get_alternative_and_reference_sequences(change, alignment, chr_name):
     alt_sequence.seq=Seq(alt_seq)
     return [alt_sequence, ref_sequence]
 
-input_file_name=sys.argv[1]
+input_file_name=sys.argv[1] #csv file with regions and ref/alt data
 maf_file_name=sys.argv[2]
-seq_folder=sys.argv[3]
-alignment_folder=sys.argv[4]
-refseq_folder=sys.argv[5]
+chr_mafs_dir=sys.argv[3]
+seq_folder=sys.argv[4]
+alignment_folder=sys.argv[5]
+refseq_folder=sys.argv[6]
+
+type=input_file_name.split(".")[0]
 
 df=pd.read_csv(input_file_name, sep="\s+", names=["Chr", "Left", "Right", "Reference", "Change", "Change type"])
 
@@ -79,11 +82,11 @@ for ind_ma in list_ma:
 
 index_by_chr={}
 
-base_maf_file_name=maf_file_name.split(".")[0]
+base_maf_file_name=maf_file_name.split("/")[-1].split(".")[0]
 
 for name in hgnames:
     chr_name=name.split(".")[1]
-    chr_maf_path=base_maf_file_name+"_chr_mafs/"+base_maf_file_name+"_"+chr_name
+    chr_maf_path=chr_mafs_dir.strip("/")+"/"+base_maf_file_name+"_"+chr_name
     AlignIO.write(ma_by_chr[name], chr_maf_path+".maf", "maf")
     index_by_chr[name]=MafIO.MafIndex(chr_maf_path+".mafindex", chr_maf_path+".maf", name)
 version_count_by_seq_name={}
@@ -122,5 +125,5 @@ for index, row in df.iterrows():
         SeqIO.write(alt_ref_sequences[0], seq_file_name, "fasta")
         refseq_file_name=refseq_folder.rstrip("/")+"/"+seq_name+".fa"
         SeqIO.write(alt_ref_sequences[1], refseq_file_name, "fasta")
-
-
+        
+print(maf_file_name + " processed")

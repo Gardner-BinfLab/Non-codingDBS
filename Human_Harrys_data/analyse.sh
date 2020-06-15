@@ -1,10 +1,10 @@
 #run from a directory which contains:
 # 1. ncVariation_dataset-testing_labels.csv --- table sheet (converted to csv) with curated benign and pathogenic data
 # adjust the name of the table if needed:
-path_csv_file='/Users/labadmin/Git/ncVarDB/ncVar_pathogenic.csv'
+path_csv_file='/Users/labadmin/Git/ncVarDB/data/ncVar_pathogenic.csv'
 # 2. ncVariation_dataset-benign_UCSC_list.csv --- table sheet (converted to csv) with bening data based on minor allele frequencies
 # adjust the name of the table if needed:
-benign_csv_file='/Users/labadmin/Git/ncVarDB/ncVar_benign.csv'
+benign_csv_file='/Users/labadmin/Git/ncVarDB/data/ncVar_benign.csv'
 # 3. process_large_table.py
 # 4. process_benign_sheet.py
 # 5. make_seq_refseq_and_alignments_from_maf.py
@@ -17,10 +17,13 @@ benign_csv_file='/Users/labadmin/Git/ncVarDB/ncVar_benign.csv'
 #python3 process_variants_in_table.py $path_csv_file overBed_pathogenic pathogenic.csv
 
 #mkdir overBed_benign
+#mkdir csvs_benign
 
-#python3 process_variants_in_table_max1KperBedfile.py $benign_csv_file overBed_benign benign.csv
+#python3 process_variants_in_table_max1KperBedfile.py $benign_csv_file overBed_benign csvs_benign
 
 type='pathogenic'
+
+#touch $type'_error'
 
 #mafFetch hg38 multiz100way overBed_$type $type'.maf'
 
@@ -35,7 +38,7 @@ type='pathogenic'
 #mkdir $type'_chr_mafs'
 
 
-#python3 make_seq_refseq_and_alignments_from_maf.py $type'.csv' $type'.maf' $type/sequences $type/alignments $type/ref_sequences > $type'_error'
+#python3 make_seq_refseq_and_alignments_from_maf.py $type'.csv' $type'.maf' $type'_chr_mafs' $type/sequences $type/alignments $type/ref_sequences > $type'_error'
 
 #touch $type'_bitscores.csv'
 
@@ -61,27 +64,33 @@ type='pathogenic'
 
 type='benign'
 
+touch $type'_error'
+
 #mkdir $type
 
 #mkdir $type/mafs
 
-for bed_file in overBed_benign/*; do
+#for bed_file in overBed_benign/*; do
 
-bname=$(basename "$bed_file")
+#bname=$(basename "$bed_file")
 
-mafFetch hg38 multiz100way $bed_file $type/mafs/$bname'.maf'
+#mafFetch hg38 multiz100way $bed_file $type/mafs/$bname'.maf'
+
+#done
+
+mkdir $type/sequences
+mkdir $type/alignments
+mkdir $type/models
+mkdir $type/scores
+mkdir $type/ref_sequences
+mkdir $type/ref_scores
+mkdir $type'_chr_mafs'
+
+for i in {1..10}; do
+
+python3 make_seq_refseq_and_alignments_from_maf.py 'csvs_benign/'$i'.csv' 'benign/mafs/bed'$i'.maf' $type'_chr_mafs' $type/sequences $type/alignments $type/ref_sequences >> $type'_error'
 
 done
-
-#mkdir $type/sequences
-#mkdir $type/alignments
-#mkdir $type/models
-#mkdir $type/scores
-#mkdir $type/ref_sequences
-#mkdir $type/ref_scores
-#mkdir $type'_chr_mafs'
-
-#python3 make_seq_refseq_and_alignments_from_maf.py $type'.csv' $type'.maf' $type/sequences $type/alignments $type/ref_sequences > $type'_error'
 
 #touch $type'_bitscores.csv'
 

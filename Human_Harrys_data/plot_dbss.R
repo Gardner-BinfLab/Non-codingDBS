@@ -41,6 +41,13 @@ ggplot(all_dbss,aes(x=DBscore, fill=type)) + geom_density(alpha=0.5)+ scale_fill
 
 dev.off()
 
+pdf("plots/DBscore_densities_ggplot_within20.pdf")
+
+ggplot(all_dbss,aes(x=DBscore, fill=type)) + geom_density(alpha=0.5)+ scale_fill_manual(values=c("deepskyblue3", "red3"),name = "Variants\n")+labs(x="Delat bit-score")+ ggtitle("DBS for pathogenic and benign variants")+ coord_fixed(ratio = 100)+theme(plot.title = element_text(hjust = 0.5))+xlim(-20,20)
+
+dev.off()
+
+
 
 dbs_path=all_dbss$DBscore[all_dbss$type=="pathogenic"]
 dbs_ben=all_dbss$DBscore[all_dbss$type=="benign"]
